@@ -46,6 +46,52 @@ HTML implementation of the calculator.
   canvas {
     filter: none;
   }
+  .calculator-container {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  max-width: 400px;
+  margin: 50px auto;
+  z-index: 1; /* keep above background */
+  position: relative;
+}
+
+.calculator-number,
+.calculator-operation,
+.calculator-clear,
+.calculator-equals {
+  background: #2d7a78;
+  color: #fff;
+  font-size: 1.5rem;
+  padding: 20px;
+  border-radius: 10px;
+  text-align: center;
+  cursor: pointer;
+  user-select: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.calculator-operation {
+  background: #4682b4;
+}
+
+.calculator-clear {
+  background: orange;
+}
+
+.calculator-equals {
+  background: red;
+}
+
+.calculator-number:hover,
+.calculator-operation:hover,
+.calculator-clear:hover,
+.calculator-equals:hover {
+  opacity: 0.8;
+}
+
 </style>
 
 <!-- Add a container for the animation -->
