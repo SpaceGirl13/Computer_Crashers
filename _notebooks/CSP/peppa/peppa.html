@@ -1,0 +1,111 @@
+---
+layout: default
+title: Peppa Pig Linux
+permalink: /peppa/
+---
+
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Peppa Pig Learns Linux</title>
+  <style>
+    body {
+      margin: 0;
+      overflow: hidden;
+      text-align: center;
+      font-family: Arial, sans-serif;
+    }
+    #peppa {
+      position: absolute;
+      width: 150px;
+      pointer-events: none;
+      transition: left 0.15s linear, top 0.15s linear;
+    }
+    /* Walking animation (bounce effect) */
+    .walking {
+      animation: walkBounce 0.3s infinite alternate;
+    }
+    @keyframes walkBounce {
+      from { transform: translateY(0); }
+      to { transform: translateY(-10px); }
+    }
+    /* Flipped facing left */
+    .flip {
+      transform: scaleX(-1);
+    }
+    #factBox {
+      position: absolute;
+      bottom: 10px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: rgba(255, 255, 255, 0.8);
+      padding: 10px 20px;
+      border-radius: 12px;
+      font-size: 1.1rem;
+      max-width: 70%;
+      box-shadow: 0 3px 10px rgba(0,0,0,0.3);
+    }
+  </style>
+</head>
+<body>
+
+  <img id="peppa" src="https://upload.wikimedia.org/wikipedia/en/d/dc/Peppa_Pig_character.png" alt="Peppa Pig">
+
+  <div id="factBox">🐷 Move your mouse and Peppa will follow! Click anywhere for a Linux fact.</div>
+
+  <script>
+    const peppa = document.getElementById("peppa");
+    const factBox = document.getElementById("factBox");
+
+    const facts = [
+      "🐧 Linux was created by Linus Torvalds in 1991.",
+      "💻 `make` automates builds so you don’t have to compile manually.",
+      "📦 Python `venv` keeps each project’s libraries separate.",
+      "🌐 Most servers on the internet run Linux.",
+      "🔧 Tux the penguin is the Linux mascot.",
+      "🚀 Linux is used in spacecraft, Android phones, and supercomputers."
+    ];
+
+    let lastX = 0;
+    let walkTimeout;
+
+    document.addEventListener("mousemove", (e) => {
+      // Move Peppa
+      peppa.style.left = `${e.clientX - 75}px`;
+      peppa.style.top = `${e.clientY - 75}px`;
+
+      // Walking bounce starts
+      peppa.classList.add("walking");
+
+      // Stop bouncing if mouse stops for a moment
+      clearTimeout(walkTimeout);
+      walkTimeout = setTimeout(() => {
+        peppa.classList.remove("walking");
+      }, 300);
+
+      // Flip left/right
+      if (e.clientX > lastX) {
+        peppa.classList.remove("flip"); // face right
+      } else if (e.clientX < lastX) {
+        peppa.classList.add("flip"); // face left
+      }
+      lastX = e.clientX;
+    });
+
+    // Click anywhere for a fact + color change
+    document.addEventListener("click", () => {
+      const fact = facts[Math.floor(Math.random() * facts.length)];
+      factBox.textContent = fact;
+      changeBackground();
+    });
+
+    function changeBackground() {
+      const r = Math.floor(Math.random() * 255);
+      const g = Math.floor(Math.random() * 255);
+      const b = Math.floor(Math.random() * 255);
+      document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
+    }
+  </script>
+</body>
+</html>
