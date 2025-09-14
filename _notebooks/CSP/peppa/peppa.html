@@ -4,9 +4,11 @@ title: Peppa Pig Linux
 permalink: /peppa/
 ---
 
-<img id="peppa" src="https://upload.wikimedia.org/wikipedia/en/d/dc/Peppa_Pig_character.png" alt="Peppa Pig">
+<div id="peppa-page">
+  <img id="peppa" src="https://upload.wikimedia.org/wikipedia/en/d/dc/Peppa_Pig_character.png" alt="Peppa Pig">
 
-<div id="factBox">🐷 Move your mouse and Peppa will follow! Click anywhere for a Linux fact.</div>
+  <div id="factBox">🐷 Move your mouse and Peppa will follow! Click anywhere for a Linux fact.</div>
+</div>
 
 <style>
   body {
@@ -21,7 +23,6 @@ permalink: /peppa/
     pointer-events: none;
     transition: left 0.15s linear, top 0.15s linear;
   }
-  /* Walking animation (bounce effect) */
   .walking {
     animation: walkBounce 0.3s infinite alternate;
   }
@@ -29,7 +30,6 @@ permalink: /peppa/
     from { transform: translateY(0); }
     to { transform: translateY(-10px); }
   }
-  /* Flipped facing left */
   .flip {
     transform: scaleX(-1);
   }
@@ -64,29 +64,24 @@ permalink: /peppa/
   let walkTimeout;
 
   document.addEventListener("mousemove", (e) => {
-    // Move Peppa
     peppa.style.left = `${e.clientX - 75}px`;
     peppa.style.top = `${e.clientY - 75}px`;
 
-    // Walking bounce starts
     peppa.classList.add("walking");
 
-    // Stop bouncing if mouse stops
     clearTimeout(walkTimeout);
     walkTimeout = setTimeout(() => {
       peppa.classList.remove("walking");
     }, 300);
 
-    // Flip left/right
     if (e.clientX > lastX) {
-      peppa.classList.remove("flip"); // face right
+      peppa.classList.remove("flip");
     } else if (e.clientX < lastX) {
-      peppa.classList.add("flip"); // face left
+      peppa.classList.add("flip");
     }
     lastX = e.clientX;
   });
 
-  // Click anywhere for a fact + color change
   document.addEventListener("click", () => {
     const fact = facts[Math.floor(Math.random() * facts.length)];
     factBox.textContent = fact;
