@@ -1,7 +1,7 @@
 ---
 layout: default
 title: Peppa Pig Linux
-sprite: /images/peppapig.png  
+sprite: images/peppapig.png  
 permalink: /peppa/
 ---
 
