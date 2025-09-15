@@ -42,5 +42,26 @@ print("Board positions:\n")
             [0, 3, 6], [1, 4, 7], [2, 5, 8],  # Columns
             [0, 4, 8], [2, 4, 6]              # Diagonals
         ]
+ print(f"Checking for winner with symbol '{symbol}'")
+        print(f"Win combinations to check: {win_combinations}")
+        
+        for combo in win_combinations:
+            if (self.grid[combo[0]] == symbol and
+                self.grid[combo[1]] == symbol and
+                self.grid[combo[2]] == symbol):
+                print(f"WINNER! Found winning combination: {combo}")
+                return True
+        print("No winner found")
+        return False
 
+# Test win detection
+board = Board()
+print("Setting up a winning scenario...")
+board.make_move(1, "X")  # Top left
+board.make_move(2, "X")  # Top middle  
+board.make_move(3, "X")  # Top right - should be a win!
+
+board.display()
+is_winner = board.check_winner("X")
+print(f"Is X the winner? {is_winner}")
 
