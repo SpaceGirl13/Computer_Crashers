@@ -23,6 +23,24 @@ class Board:
         print("\n")
     def display_reference(self):
         reference = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
-
+print("Board positions:\n")
+        print(" " + reference[0] + " | " + reference[1] + " | " + reference[2])
+        print("---+---+---")
+        print(" " + reference[3] + " | " + reference[4] + " | " + reference[5])
+        print("---+---+---")
+        print(" " + reference[6] + " | " + reference[7] + " | " + reference[8])
+        print("\n")
+    def make_move(self, position, symbol):
+        index = position - 1
+        if 0 <= index <= 8 and self.grid[index] == " ":
+            self.grid[index] = symbol
+            return True
+        return False
+    def check_winner(self, symbol):
+        win_combinations = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],  # Rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],  # Columns
+            [0, 4, 8], [2, 4, 6]              # Diagonals
+        ]
 
 
