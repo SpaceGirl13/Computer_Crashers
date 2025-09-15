@@ -2,11 +2,11 @@ class Player:
     def __init__(self, name, symbol):
         self.name = name
         self.symbol = symbol
-
+# creates board
 class Board:
     def __init__(self):
         self.grid = [" "] * 9
-
+# displays board
     def display(self):
         print("\n")
         print(" " + self.grid[0] + " | " + self.grid[1] + " | " + self.grid[2])
@@ -15,7 +15,7 @@ class Board:
         print("---+---+---")
         print(" " + self.grid[6] + " | " + self.grid[7] + " | " + self.grid[8])
         print("\n")
-
+# shows reference numbers for player
     def display_reference(self):
         reference = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
         print("Board positions:\n")
