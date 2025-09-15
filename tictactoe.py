@@ -1,14 +1,19 @@
+
+
 class Player:
     def __init__(self, name, symbol):
         self.name = name
         self.symbol = symbol
+        
+# Let's test it by creating some players
 player1 = Player("Peppa", "X")
 player2 = Player("George", "O")
 print(f"Player 1: {player1.name} uses symbol '{player1.symbol}'")
 print(f"Player 2: {player2.name} uses symbol '{player2.symbol}'")
+
 class Board:
     def __init__(self):
-        self.grid = [" "] * 9 
+        self.grid = [" "] * 9  # Creates 9 empty spaces
         print("New board created!")
         print(f"Grid contents: {self.grid}")
     def display(self):
@@ -36,9 +41,9 @@ class Board:
         return False
     def check_winner(self, symbol):
         win_combinations = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8],
-            [0, 3, 6], [1, 4, 7], [2, 5, 8],
-            [0, 4, 8], [2, 4, 6]
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],  # Rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],  # Columns
+            [0, 4, 8], [2, 4, 6]              # Diagonals
         ]
         print(f"Checking for winner with symbol '{symbol}'")
         print(f"Win combinations to check: {win_combinations}")
@@ -50,13 +55,14 @@ class Board:
                 return True
         print("No winner found")
         return False
+
+# Test win detection
 board = Board()
 print("Setting up a winning scenario...")
-board.make_move(1, "X") 
-board.make_move(2, "X") 
-board.make_move(3, "X") 
+board.make_move(1, "X")  # Top left
+board.make_move(2, "X")  # Top middle  
+board.make_move(3, "X")  # Top right - should be a win!
 
 board.display()
 is_winner = board.check_winner("X")
 print(f"Is X the winner? {is_winner}")
-
