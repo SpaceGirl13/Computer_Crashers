@@ -1,14 +1,14 @@
 ---
 layout: default
 title: Peppa Pig Linux
+sprite: /images/peppapig.png  
 permalink: /peppa/
 ---
 
 <div id="peppa-page">
-  <!-- wrapper holds position + bounce; img handles flipping -->
   <div id="peppa-wrapper">
-    <!-- Updated image to a working transparent PNG -->
-    <img id="peppa" src="https://pngimg.com/d/peppa_pig_PNG16.png" alt="Peppa Pig">
+    <!-- Now uses the sprite variable from front matter -->
+    <img id="peppa" src="{{ page.sprite }}" alt="Peppa Pig">
   </div>
 
   <div id="factBox">🐷 Move your mouse and Peppa will follow! Click anywhere for a Linux fact.</div>
@@ -78,27 +78,21 @@ document.addEventListener('DOMContentLoaded', function () {
   let walkTimeout;
 
   document.addEventListener("mousemove", (e) => {
-    // Position the wrapper so the image centers on cursor
     wrapper.style.left = (e.clientX - wrapper.offsetWidth / 2) + "px";
     wrapper.style.top  = (e.clientY - wrapper.offsetHeight / 2) + "px";
 
-    // Start walking bounce on wrapper
     wrapper.classList.add("walking");
-
-    // Stop bouncing if mouse stops
     clearTimeout(walkTimeout);
     walkTimeout = setTimeout(() => wrapper.classList.remove("walking"), 300);
 
-    // Flip image left/right by toggling class on the image (no transform conflict)
     if (e.clientX > lastX) {
-      peppa.classList.remove("flip"); // face right
+      peppa.classList.remove("flip");
     } else if (e.clientX < lastX) {
-      peppa.classList.add("flip"); // face left
+      peppa.classList.add("flip");
     }
     lastX = e.clientX;
   });
 
-  // Click anywhere for a fact + color change
   document.addEventListener("click", () => {
     const fact = facts[Math.floor(Math.random() * facts.length)];
     factBox.textContent = fact;
@@ -106,7 +100,7 @@ document.addEventListener('DOMContentLoaded', function () {
   });
 
   function changeBackground() {
-    const r = Math.floor(Math.random() * 200) + 30; // avoid extreme black
+    const r = Math.floor(Math.random() * 200) + 30;
     const g = Math.floor(Math.random() * 200) + 30;
     const b = Math.floor(Math.random() * 200) + 30;
     document.body.style.backgroundColor = `rgb(${r}, ${g}, ${b})`;
