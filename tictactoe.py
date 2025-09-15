@@ -147,8 +147,8 @@ def main():
     # Create players
     name1 = input("Enter name for Player 1 (X): ")
     name2 = input("Enter name for Player 2 (O): ")
-    player1 = EnhancedPlayer(name1, "X")
-    player2 = EnhancedPlayer(name2, "O")
+    player1 = (name1, "X")
+    player2 = (name2, "O")
 
     while True:
         # Set up the game
@@ -170,7 +170,7 @@ def main():
 
             if game.board.check_winner(game.current_player.symbol):
                 print(f"🎉 {game.current_player.name} wins!")
-                if isinstance(game.current_player, EnhancedPlayer):
+                if isinstance(game.current_player,):
                     game.current_player.add_win()
                 break
 
