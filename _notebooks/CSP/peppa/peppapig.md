@@ -1,14 +1,15 @@
 ---
-layout: default
+layout: base
 title: Peppa Pig Linux
-sprite: images/peppapig.png  
-permalink: /peppa/
+description: Interactive Peppa that follows your cursor and teaches Linux
+sprite: images/peppapig.png
+permalink: /peppa
 ---
 
 <div id="peppa-page">
   <div id="peppa-wrapper">
-    <!-- Now uses the sprite variable from front matter -->
-    <img id="peppa" src="{{ page.sprite }}" alt="Peppa Pig">
+    <!-- Use Jekyll variable for sprite -->
+    <img id="peppa" src="{{page.sprite}}" alt="Peppa Pig">
   </div>
 
   <div id="factBox">🐷 Move your mouse and Peppa will follow! Click anywhere for a Linux fact.</div>
@@ -86,9 +87,9 @@ document.addEventListener('DOMContentLoaded', function () {
     walkTimeout = setTimeout(() => wrapper.classList.remove("walking"), 300);
 
     if (e.clientX > lastX) {
-      peppa.classList.remove("flip");
+      peppa.classList.remove("flip"); // face right
     } else if (e.clientX < lastX) {
-      peppa.classList.add("flip");
+      peppa.classList.add("flip"); // face left
     }
     lastX = e.clientX;
   });
