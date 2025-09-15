@@ -141,8 +141,50 @@ class TicTacToe:
 player1 = Player("Peppa", "X")
 player2 = Player("George", "O")
 game = TicTacToe(player1, player2)
+def main():
+    print("Welcome to Tic-Tac-Toe!\n")
 
-print(f"Game created! Current player: {game.current_player.name}")
-game.switch_player()
-game.switch_player()
->>>>>>> e884b7f (Peppa and George name change)
+    # Create players
+    name1 = input("Enter name for Player 1 (X): ")
+    name2 = input("Enter name for Player 2 (O): ")
+    player1 = EnhancedPlayer(name1, "X")
+    player2 = EnhancedPlayer(name2, "O")
+
+    while True:
+        # Set up the game
+        game = TicTacToe(player1, player2)
+        game.board.display_reference()
+        game.board.display()
+
+        while True:
+            try:
+                move = int(input(f"{game.current_player.name} ({game.current_player.symbol}), enter your move (1-9): "))
+            except ValueError:
+                print("Please enter a valid number.")
+                continue
+
+            if not game.board.make_move(move, game.current_player.symbol):
+                continue
+
+            game.board.display()
+
+            if game.board.check_winner(game.current_player.symbol):
+                print(f"🎉 {game.current_player.name} wins!")
+                if isinstance(game.current_player, EnhancedPlayer):
+                    game.current_player.add_win()
+                break
+
+            if game.board.is_full():
+                print("It's a draw!")
+                break
+
+            game.switch_player()
+
+        play_again = input("Play again? (y/n): ").lower()
+        if play_again != 'y':
+            print("Thanks for playing!")
+            break
+
+# Run the game
+if __name__ == "__main__":
+    main()
