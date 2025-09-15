@@ -65,4 +65,84 @@ board.make_move(3, "X")  # Top right - should be a win!
 
 board.display()
 is_winner = board.check_winner("X")
+<<<<<<< HEAD
 print(f"Is X the winner? {is_winner}")
+=======
+print("Is X the winner? {is_winner}")
+class Player:
+    def __init__(self, name, symbol):
+        self.name = name
+        self.symbol = symbol
+
+class Board:
+    def __init__(self):
+        self.grid = [" "] * 9
+
+    def display(self):
+        print("\n")
+        print(" " + self.grid[0] + " | " + self.grid[1] + " | " + self.grid[2])
+        print("---+---+---")
+        print(" " + self.grid[3] + " | " + self.grid[4] + " | " + self.grid[5])
+        print("---+---+---")
+        print(" " + self.grid[6] + " | " + self.grid[7] + " | " + self.grid[8])
+        print("\n")
+
+    def display_reference(self):
+        reference = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
+        print("Board positions:\n")
+        print(" " + reference[0] + " | " + reference[1] + " | " + reference[2])
+        print("---+---+---")
+        print(" " + reference[3] + " | " + reference[4] + " | " + reference[5])
+        print("---+---+---")
+        print(" " + reference[6] + " | " + reference[7] + " | " + reference[8])
+        print("\n")
+
+    def is_full(self):
+        return " " not in self.grid
+
+    def make_move(self, position, symbol):
+        index = position - 1
+        if index < 0 or index > 8:
+            print("Invalid position. Choose a number between 1 and 9.")
+            return False
+        if self.grid[index] != " ":
+            print("That spot is already taken. Try again.")
+            return False
+        self.grid[index] = symbol
+        return True
+
+    def check_winner(self, symbol):
+        win_combinations = [
+            [0, 1, 2], [3, 4, 5], [6, 7, 8],  # Rows
+            [0, 3, 6], [1, 4, 7], [2, 5, 8],  # Columns
+            [0, 4, 8], [2, 4, 6]              # Diagonals
+        ]
+        for combo in win_combinations:
+            if (self.grid[combo[0]] == symbol and
+                self.grid[combo[1]] == symbol and
+                self.grid[combo[2]] == symbol):
+                return True
+        return False
+
+class TicTacToe:
+    def __init__(self, player1, player2):
+        self.board = Board()              # Composition: TicTacToe "has-a" Board
+        self.players = [player1, player2] # Stores both players
+        self.current_player = player1     # Tracks whose turn it is
+
+    def switch_player(self):
+        # Alternate between the two players
+        self.current_player = (
+            self.players[1] if self.current_player == self.players[0] else self.players[0]
+        )
+        print(f"Now it's {self.current_player.name}'s turn")
+
+# Test the TicTacToe class setup
+player1 = Player("Peppa", "X")
+player2 = Player("George", "O")
+game = TicTacToe(player1, player2)
+
+print(f"Game created! Current player: {game.current_player.name}")
+game.switch_player()
+game.switch_player()
+>>>>>>> e884b7f (Peppa and George name change)
