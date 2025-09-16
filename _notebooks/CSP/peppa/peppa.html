@@ -4,24 +4,37 @@ title: Peppa Pig Linux
 permalink: /peppa/
 ---
 
+<!-- Peppa Pig Game Container -->
 <div id="peppa-page">
+<<<<<<< HEAD
   <!-- wrapper holds position + bounce; img handles flipping -->
   <div id="peppa-wrapper">
     <img id="peppa" src="https://upload.wikimedia.org/wikipedia/commons/6/6f/Peppa_Pig.svg" alt="Peppa Pig">
   </div>
+=======
+  <!-- Peppa Pig Image -->
+  <img id="peppa" src="https://upload.wikimedia.org/wikipedia/en/d/dc/Peppa_Pig_character.png" alt="Peppa Pig">
+>>>>>>> 64d96fce4114b6346c6e437321c78af2800f2bea
 
+  <!-- Fact box that displays Linux facts -->
   <div id="factBox">🐷 Move your mouse and Peppa will follow! Click anywhere for a Linux fact.</div>
 </div>
 
+<!-- Styles for Peppa Pig game -->
 <style>
+<<<<<<< HEAD
   /* page-level styles (safe to keep inline) */
+=======
+  /* Set body styles for layout */
+>>>>>>> 64d96fce4114b6346c6e437321c78af2800f2bea
   body {
     margin: 0;
-    overflow: hidden;
+    overflow: hidden; /* Prevent scrollbars when Peppa moves */
     text-align: center;
     font-family: Arial, sans-serif;
   }
 
+<<<<<<< HEAD
   /* wrapper => position + bounce animation */
   #peppa-wrapper {
     position: absolute;
@@ -40,29 +53,60 @@ permalink: /peppa/
   }
 
   /* walking bounce (applied to wrapper) */
-  .walking {
-    animation: walkBounce 0.3s infinite alternate;
+=======
+  /* Peppa image styles */
+  #peppa {
+    position: absolute;        /* Allows Peppa to move freely around the screen */
+    width: 150px;              /* Size of Peppa image */
+    pointer-events: none;      /* Allows clicks to pass through Peppa */
+    transition: left 0.15s linear, top 0.15s linear; /* Smooth movement */
   }
+
+  /* Walking animation class */
+>>>>>>> 64d96fce4114b6346c6e437321c78af2800f2bea
+  .walking {
+    animation: walkBounce 0.3s infinite alternate; /* Simulates a bounce while walking */
+  }
+
+  /* Walking bounce keyframe animation */
   @keyframes walkBounce {
+<<<<<<< HEAD
     from { transform: translateY(0); }
     to   { transform: translateY(-10px); }
   }
 
   /* flipped facing left (applied to the img element) */
-  .flip {
-    transform: scaleX(-1);
+=======
+    from { transform: translateY(0); }           /* Start at base position */
+    to { transform: translateY(-10px); }         /* Bounce upward slightly */
   }
 
+  /* Flip class to face left or right */
+>>>>>>> 64d96fce4114b6346c6e437321c78af2800f2bea
+  .flip {
+    transform: scaleX(-1); /* Flips image horizontally */
+  }
+
+<<<<<<< HEAD
+=======
+  /* Fact box styling at the bottom of the screen */
+>>>>>>> 64d96fce4114b6346c6e437321c78af2800f2bea
   #factBox {
     position: absolute;
     bottom: 10px;
     left: 50%;
+<<<<<<< HEAD
     transform: translateX(-50%);
     background: rgba(255, 255, 255, 0.92);
+=======
+    transform: translateX(-50%); /* Center horizontally */
+    background: rgba(255, 255, 255, 0.8); /* Semi-transparent white background */
+>>>>>>> 64d96fce4114b6346c6e437321c78af2800f2bea
     padding: 10px 20px;
     border-radius: 12px;
     font-size: 1.05rem;
     max-width: 70%;
+<<<<<<< HEAD
     box-shadow: 0 3px 10px rgba(0,0,0,0.18);
   }
 </style>
@@ -71,9 +115,19 @@ permalink: /peppa/
 <script>
 document.addEventListener('DOMContentLoaded', function () {
   const wrapper = document.getElementById("peppa-wrapper");
+=======
+    box-shadow: 0 3px 10px rgba(0,0,0,0.3); /* Subtle shadow for depth */
+  }
+</style>
+
+<!-- JavaScript for Interactivity -->
+<script>
+  // Get references to the DOM elements
+>>>>>>> 64d96fce4114b6346c6e437321c78af2800f2bea
   const peppa = document.getElementById("peppa");
   const factBox = document.getElementById("factBox");
 
+  // Array of fun Linux facts
   const facts = [
     "🐧 Linux was created by Linus Torvalds in 1991.",
     "💻 `make` automates builds so you don’t have to compile manually.",
@@ -83,10 +137,12 @@ document.addEventListener('DOMContentLoaded', function () {
     "🚀 Linux is used in spacecraft, Android phones, and supercomputers."
   ];
 
-  let lastX = 0;
-  let walkTimeout;
+  let lastX = 0;           // Stores the last horizontal mouse position
+  let walkTimeout;         // Stores timeout for removing walking class
 
+  // Move Peppa with the mouse
   document.addEventListener("mousemove", (e) => {
+<<<<<<< HEAD
     // Position the wrapper so the image centers on cursor
     wrapper.style.left = (e.clientX - wrapper.offsetWidth / 2) + "px";
     wrapper.style.top  = (e.clientY - wrapper.offsetHeight / 2) + "px";
@@ -95,25 +151,53 @@ document.addEventListener('DOMContentLoaded', function () {
     wrapper.classList.add("walking");
 
     // Stop bouncing if mouse stops
+=======
+    // Update Peppa's position relative to mouse
+    peppa.style.left = `${e.clientX - 75}px`;
+    peppa.style.top = `${e.clientY - 75}px`;
+
+    // Add walking animation
+    peppa.classList.add("walking");
+
+    // Clear previous timeout and set a new one to stop walking animation after 300ms
+>>>>>>> 64d96fce4114b6346c6e437321c78af2800f2bea
     clearTimeout(walkTimeout);
     walkTimeout = setTimeout(() => wrapper.classList.remove("walking"), 300);
 
+<<<<<<< HEAD
     // Flip image left/right by toggling class on the image (no transform conflict)
     if (e.clientX > lastX) {
       peppa.classList.remove("flip"); // face right
     } else if (e.clientX < lastX) {
       peppa.classList.add("flip"); // face left
+=======
+    // Flip Peppa left or right depending on mouse direction
+    if (e.clientX > lastX) {
+      peppa.classList.remove("flip"); // Face right
+    } else if (e.clientX < lastX) {
+      peppa.classList.add("flip");    // Face left
+>>>>>>> 64d96fce4114b6346c6e437321c78af2800f2bea
     }
+
+    // Store current X position for next comparison
     lastX = e.clientX;
   });
 
+<<<<<<< HEAD
   // Click anywhere for a fact + color change
+=======
+  // Click anywhere to show a Linux fact and change background color
+>>>>>>> 64d96fce4114b6346c6e437321c78af2800f2bea
   document.addEventListener("click", () => {
+    // Pick a random fact from the array
     const fact = facts[Math.floor(Math.random() * facts.length)];
     factBox.textContent = fact;
+
+    // Change background color to a random RGB color
     changeBackground();
   });
 
+  // Function to change background color randomly
   function changeBackground() {
     const r = Math.floor(Math.random() * 200) + 30; // avoid extreme black
     const g = Math.floor(Math.random() * 200) + 30;
