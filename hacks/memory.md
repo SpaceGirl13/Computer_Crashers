@@ -28,6 +28,15 @@ permalink: /javascript/project/memory
       background-size: cover;
       background-position: center;
     }
+    /* description styling */
+    p.description {
+      margin: 12px auto;
+      font-size: 16px;
+      color: #333;
+      max-width: 600px;
+      line-height: 1.4;
+      text-align: left;
+    }
   </style>
 </head>
 <body>
@@ -195,9 +204,10 @@ permalink: /javascript/project/memory
 
   </script>
 
+  <!-- fixed paragraphs (note the proper closing tags) -->
   <p class="description"><strong>About this game:</strong></p>
-  <p class="description">I customized this memory game by changing the emojis to Peppa Pig themed animals.<p>
-  <p class="description">Additonally, I customized this memory game by adding a farm-themed background.</p>
+  <p class="description">I customized this memory game by changing the emojis to Peppa Pig themed animals.</p>
+  <p class="description">Additionally, I customized this memory game by adding a farm-themed background.</p>
   <p class="description">I also added a flip animation so tiles rotate instead of instantly switching.</p>
   <p class="description">Finally, I included a 60-second countdown timer to add challenge.</p>
 
