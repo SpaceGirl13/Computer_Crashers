@@ -1,83 +1,12 @@
-
-
 class Player:
     def __init__(self, name, symbol):
         self.name = name
         self.symbol = symbol
-        
-# Let's test it by creating some players
-player1 = Player("Peppa", "X")
-player2 = Player("George", "O")
-print(f"Player 1: {player1.name} uses symbol '{player1.symbol}'")
-print(f"Player 2: {player2.name} uses symbol '{player2.symbol}'")
-
-class Board:
-    def __init__(self):
-        self.grid = [" "] * 9  # Creates 9 empty spaces
-        print("New board created!")
-        print(f"Grid contents: {self.grid}")
-    def display(self):
-        print("\n")
-        print(" " + self.grid[0] + " | " + self.grid[1] + " | " + self.grid[2])
-        print("---+---+---")
-        print(" " + self.grid[3] + " | " + self.grid[4] + " | " + self.grid[5])
-        print("---+---+---")
-        print(" " + self.grid[6] + " | " + self.grid[7] + " | " + self.grid[8])
-        print("\n")
-    def display_reference(self):
-        reference = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
-        print("Board positions:\n")
-        print(" " + reference[0] + " | " + reference[1] + " | " + reference[2])
-        print("---+---+---")
-        print(" " + reference[3] + " | " + reference[4] + " | " + reference[5])
-        print("---+---+---")
-        print(" " + reference[6] + " | " + reference[7] + " | " + reference[8])
-        print("\n")
-    def make_move(self, position, symbol):
-        index = position - 1
-        if 0 <= index <= 8 and self.grid[index] == " ":
-            self.grid[index] = symbol
-            return True
-        return False
-    def check_winner(self, symbol):
-        win_combinations = [
-            [0, 1, 2], [3, 4, 5], [6, 7, 8],  # Rows
-            [0, 3, 6], [1, 4, 7], [2, 5, 8],  # Columns
-            [0, 4, 8], [2, 4, 6]              # Diagonals
-        ]
-        print(f"Checking for winner with symbol '{symbol}'")
-        print(f"Win combinations to check: {win_combinations}")
-        for combo in win_combinations:
-            if (self.grid[combo[0]] == symbol and
-                self.grid[combo[1]] == symbol and
-                self.grid[combo[2]] == symbol):
-                print(f"WINNER! Found winning combination: {combo}")
-                return True
-        print("No winner found")
-        return False
-
-# Test win detection
-board = Board()
-print("Setting up a winning scenario...")
-board.make_move(1, "X")  # Top left
-board.make_move(2, "X")  # Top middle  
-board.make_move(3, "X")  # Top right - should be a win!
-
-board.display()
-is_winner = board.check_winner("X")
-<<<<<<< HEAD
-print(f"Is X the winner? {is_winner}")
-=======
-print("Is X the winner? {is_winner}")
-class Player:
-    def __init__(self, name, symbol):
-        self.name = name
-        self.symbol = symbol
-
+# creates board
 class Board:
     def __init__(self):
         self.grid = [" "] * 9
-
+# displays board
     def display(self):
         print("\n")
         print(" " + self.grid[0] + " | " + self.grid[1] + " | " + self.grid[2])
@@ -86,7 +15,7 @@ class Board:
         print("---+---+---")
         print(" " + self.grid[6] + " | " + self.grid[7] + " | " + self.grid[8])
         print("\n")
-
+# shows reference numbers for player
     def display_reference(self):
         reference = ["1", "2", "3", "4", "5", "6", "7", "8", "9"]
         print("Board positions:\n")
@@ -136,19 +65,22 @@ class TicTacToe:
             self.players[1] if self.current_player == self.players[0] else self.players[0]
         )
         print(f"Now it's {self.current_player.name}'s turn")
-
-# Test the TicTacToe class setup
-player1 = Player("Peppa", "X")
-player2 = Player("George", "O")
-game = TicTacToe(player1, player2)
+class EnhancedPlayer(Player):
+    def __init__(self, name, symbol):
+        super().__init__(name, symbol)
+        self.wins = 0
+    
+    def add_win(self):
+        self.wins += 1
+        print(f"{self.name} now has {self.wins} wins!")
 def main():
-    print("Welcome to Tic-Tac-Toe!\n")
+    print("Welcome to Peppa and George's Tic-Tac-Toe!🐷\n")
 
     # Create players
-    name1 = input("Enter name for Player 1 (X): ")
-    name2 = input("Enter name for Player 2 (O): ")
-    player1 = (name1, "X")
-    player2 = (name2, "O")
+    name1 = input("Enter name for Player 1 (🐷): ")
+    name2 = input("Enter name for Player 2 (🌲): ")
+    player1 = EnhancedPlayer(name1, "🐷")
+    player2 = EnhancedPlayer(name2, "🌲")
 
     while True:
         # Set up the game
@@ -170,7 +102,7 @@ def main():
 
             if game.board.check_winner(game.current_player.symbol):
                 print(f"🎉 {game.current_player.name} wins!")
-                if isinstance(game.current_player,):
+                if isinstance(game.current_player, EnhancedPlayer):
                     game.current_player.add_win()
                 break
 
@@ -182,9 +114,9 @@ def main():
 
         play_again = input("Play again? (y/n): ").lower()
         if play_again != 'y':
-            print("Thanks for playing!")
+            print("Thanks for playing, Bye!")
             break
 
 # Run the game
-if __name__ == "__main__": 
+if __name__ == "__main__":
     main()
