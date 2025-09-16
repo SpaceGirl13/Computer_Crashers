@@ -11,9 +11,10 @@ permalink: /peppa-maze
 <div id="linksBox" style="display:none;">
   <h3>🎓 Explore Computer Science:</h3>
   <ul>
-    <li><a href="https://cs50.harvard.edu" target="_blank">CS50 – Harvard Intro to CS</a></li>
-    <li><a href="https://developer.mozilla.org/en-US/" target="_blank">MDN Web Docs</a></li>
-    <li><a href="https://www.geeksforgeeks.org" target="_blank">GeeksforGeeks</a></li>
+    <li><a href="https://spacegirl13.github.io/Computer_Crashers/lxd/setup/mac" target="_blank">LxD Setup on Mac</a></li>
+    <li><a href="https://spacegirl13.github.io/Computer_Crashers/lxd/setup/make" target="_blank">LxD Setup for Make</a></li>
+    <li><a href="https://spacegirl13.github.io/Computer_Crashers/lxd/setup/windows" target="_blank">LxD Setup on Windows</a></li>
+    <li><a href="https://spacegirl13.github.io/Computer_Crashers/lxd/setup/venv" target="_blank">LxD Setup for venv</a></li>
   </ul>
 </div>
 
