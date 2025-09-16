@@ -4,220 +4,194 @@ title: Memory Game
 permalink: /javascript/project/memory
 ---
 
-<style>
-    .memoryCanvas { 
-        border: 10px solid #000;
-        display: block;
-        margin-left: auto;
-        margin-right: auto;
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Farm Memory Game</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      background: #f0f8ff;
     }
-    
-    h2 {
-        text-align: center;
-        margin-top: 20px;
+    #timer {
+      font-size: 24px;
+      font-weight: bold;
+      margin-bottom: 10px;
+      color: darkred;
     }
-    
-.memoryCanvas {
-    border: 10px solid #000;
-    display: block;
-    margin-left: auto;
-    margin-right: auto;
-    background-image: url('images/farmbackground.jpg'); /* your image path */
-    background-size: cover;  /* make sure it covers the canvas */
-    background-position: center;
-}
+    .memoryCanvas {
+      border: 10px solid #000;
+      display: block;
+      margin: 0 auto;
+      background-size: cover;
+      background-position: center;
+    }
+  </style>
+</head>
+<body>
+  <h1>Farm Memory Game</h1>
+  <div id="timer">Time Left: 60</div>
+  <canvas id="memoryCanvas" class="memoryCanvas" width="600" height="600"></canvas>
 
-</style>
+  <script>
+    const memCanvas = document.getElementById("memoryCanvas");
+    const memCtx = memCanvas.getContext("2d");
 
-<h2>Memory Game</h2>
-<p>Score: <span class="score"></span></p>
-<p>Attempts: <span class="attempts"></span></p>
-<div class="container">
-    <canvas class="memoryCanvas" id="memoryCanvas" width="600" height="400"></canvas>
-</div>
+    const bgImage = new Image();
+    bgImage.src = "{{ site.baseurl }}/images/farmbackground.jpg";
 
-<div class="description" style="margin: 20px auto; max-width: 600px; text-align: center;">
-    <h3>About This Project</h3>
-    <p>
-        In this memory game, I changed the emojis to represent the characters in Peppa Pig. (Sheep-Suzy, Horse-Pedro, Dog-Danny, Zebra-Zoey, Elephant-Ellie, Rabbit-Rebecca, Giraffe-Gerald)
-        I also changed the background to a farm setting because most of these animals are farm animals.
-    </p>
-</div>
+    const emojis = ["🦒","🐷","🐰","🐴","🐑","🐶","🐘","🦓"];
+    let emojiList = [...emojis, ...emojis];
+    emojiList = shuffleArray(emojiList);
 
-<script>
-    // Get canvas and context for drawing
-    const memCanvas = document.getElementById('memoryCanvas');
-    const memCtx = memCanvas.getContext('2d');
+    let revealedCells = [];
+    let matchedCells = [];
 
-    // Game state variables
-    let clicks = 0; // Tracks number of clicks in current turn
-    let revealedCells = []; // Stores currently revealed cells [{col, row, emoji}]
-    let matchedCells = []; // Stores matched cells [{col, row}]
-    const scoreDisplay = document.querySelector('.score');
-    const attemptsDisplay = document.querySelector('.attempts');
-    let score = 0; // Player's score
-    let attempts = 0; // Number of attempts made
-    scoreDisplay.textContent = score;
-    attemptsDisplay.textContent = attempts;
+    let timeLeft = 60;
+    let timerId = null;
 
-    // Draws the grid lines on the canvas
+    function shuffleArray(array) {
+      let currentIndex = array.length, randomIndex;
+      while (currentIndex !== 0) {
+        randomIndex = Math.floor(Math.random() * currentIndex);
+        currentIndex--;
+        [array[currentIndex], array[randomIndex]] = [array[randomIndex], array[currentIndex]];
+      }
+      return array;
+    }
+
+    function drawBackground() {
+      memCtx.drawImage(bgImage, 0, 0, memCanvas.width, memCanvas.height);
+    }
+
     function drawGrid(cols, rows) {
-        memCtx.strokeStyle = '#000';
-        memCtx.lineWidth = 10;
-
-        canvasCol = cols;
-        canvasRow = rows;
-
-        const canvasWidth = memCanvas.width;
-        const canvasHeight = memCanvas.height;
-
-        // Draw vertical lines
-        for (let x = 0; x <= canvasWidth; x += canvasWidth / canvasCol) {
-            memCtx.beginPath();
-            memCtx.moveTo(x, 0);
-            memCtx.lineTo(x, canvasHeight);
-            memCtx.stroke();
+      const cellWidth = memCanvas.width / cols;
+      const cellHeight = memCanvas.height / rows;
+      memCtx.strokeStyle = "#000";
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          memCtx.strokeRect(col * cellWidth, row * cellHeight, cellWidth, cellHeight);
         }
-        // Draw horizontal lines
-        for (let y = 0; y <= canvasHeight; y += canvasHeight / canvasRow) {
-            memCtx.beginPath();
-            memCtx.moveTo(0, y);
-            memCtx.lineTo(canvasWidth, y);
-            memCtx.stroke();
-        }
+      }
     }
 
-    // Draws all emojis on the grid (used for initial reveal)
-    function drawEmojis(cols, rows, emojis) {
-        const cellWidth = memCanvas.width / cols;
-        const cellHeight = memCanvas.height / rows;
-        memCtx.font = `${Math.floor(Math.min(cellWidth, cellHeight) * 0.6)}px serif`;
-        memCtx.textAlign = "center";
-        memCtx.textBaseline = "middle";
-
-        let emojiIndex = 0;
-        for (let row = 0; row < rows; row++) {
-            for (let col = 0; col < cols; col++) {
-                const x = col * cellWidth + cellWidth / 2;
-                const y = row * cellHeight + cellHeight / 2;
-                const emoji = emojis[emojiIndex % emojis.length];
-                memCtx.fillText(emoji, x, y);
-                emojiIndex++;
-            }
-        }
-    }
-
-    drawGrid(4, 4); // Draw the grid
-
-    // Prepare emoji pairs and shuffle
-    const baseEmojis = [
-        "🐷", "🐑", "🐶", "🐴", "🦓", "🐰", "🦒", "🐘"
-    ];
-    // Duplicate emojis for pairs (16 cells, 8 pairs)
-    const emojiList = [...baseEmojis, ...baseEmojis];
-
-    // Shuffle the emoji list so pairs are random
-    function shuffle(array) {
-        for (let i = array.length - 1; i > 0; i--) {
-            const j = Math.floor(Math.random() * (i + 1));
-            [array[i], array[j]] = [array[j], array[i]];
-        }
-    }
-    shuffle(emojiList);
-
-    // Covers all cells except matched ones with a gray rectangle
     function hideEmojis(cols, rows) {
-        const cellWidth = memCanvas.width / cols;
-        const cellHeight = memCanvas.height / rows;
+      drawBackground();
+      drawGrid(cols, rows);
+      const cellWidth = memCanvas.width / cols;
+      const cellHeight = memCanvas.height / rows;
 
-        for (let row = 0; row < rows; row++) {
-            for (let col = 0; col < cols; col++) {
-                // Only hide if not matched
-                if (!matchedCells.some(cell => cell.col === col && cell.row === row)) {
-                    memCtx.fillStyle = '#CCCCCC';
-                    memCtx.fillRect(col * cellWidth + 5, row * cellHeight + 5, cellWidth - 10, cellHeight - 10);
-                }
-            }
+      for (let row = 0; row < rows; row++) {
+        for (let col = 0; col < cols; col++) {
+          if (!matchedCells.some(cell => cell.col === col && cell.row === row)) {
+            memCtx.fillStyle = '#CCCCCC';
+            memCtx.fillRect(col * cellWidth + 5, row * cellHeight + 5, cellWidth - 10, cellHeight - 10);
+          }
         }
+      }
     }
-    // Show all emojis for 3 seconds, then hide them
-    setTimeout(() => hideEmojis(4, 4), 3000);
 
-    // Reveals the emoji at a specific cell
     function revealEmojiAt(col, row, emojis) {
-        const cellWidth = memCanvas.width / 4;
-        const cellHeight = memCanvas.height / 4;
-        const x = col * cellWidth + cellWidth / 2;
-        const y = row * cellHeight + cellHeight / 2;
-        const emojiIndex = row * 4 + col;
-        const emoji = emojis[emojiIndex];
+      if (matchedCells.some(c => c.col === col && c.row === row)) return;
+      if (revealedCells.some(c => c.col === col && c.row === row)) return;
 
-        // Draw white background and emoji
-        memCtx.fillStyle = '#FFFFFF';
-        memCtx.fillRect(col * cellWidth + 5, row * cellHeight + 5, cellWidth - 10, cellHeight - 10);
-        memCtx.fillStyle = '#000000';
-        memCtx.fillText(emoji, x, y);
-        return emoji;
+      const cellWidth = memCanvas.width / 4;
+      const cellHeight = memCanvas.height / 4;
+      const x = col * cellWidth;
+      const y = row * cellHeight;
+      const emojiIndex = row * 4 + col;
+      const emoji = emojis[emojiIndex];
+
+      // Animate flip
+      let scale = 1.0;
+      let shrinking = true;
+      const anim = setInterval(() => {
+        drawBackground();
+        drawGrid(4, 4);
+        hideEmojis(4, 4);
+
+        memCtx.save();
+        memCtx.translate(x + cellWidth / 2, y + cellHeight / 2);
+        memCtx.scale(scale, 1);
+
+        if (shrinking) {
+          memCtx.fillStyle = '#CCCCCC';
+          memCtx.fillRect(-cellWidth/2 + 5, -cellHeight/2 + 5, cellWidth - 10, cellHeight - 10);
+        } else {
+          memCtx.fillStyle = '#FFFFFF';
+          memCtx.fillRect(-cellWidth/2 + 5, -cellHeight/2 + 5, cellWidth - 10, cellHeight - 10);
+          memCtx.fillStyle = '#000000';
+          memCtx.font = "40px Arial";
+          memCtx.textAlign = "center";
+          memCtx.textBaseline = "middle";
+          memCtx.fillText(emoji, 0, 0);
+        }
+
+        memCtx.restore();
+
+        if (shrinking) {
+          scale -= 0.1;
+          if (scale <= 0) shrinking = false;
+        } else {
+          scale += 0.1;
+          if (scale >= 1) {
+            clearInterval(anim);
+            revealedCells.push({col, row, emoji});
+            checkMatch();
+          }
+        }
+      }, 30);
     }
 
-    // Handles user clicks on the canvas
-    memCanvas.addEventListener('click', (event) => {
-        // Limit to two revealed cells at a time
-        if (revealedCells.length >= 2) {
-            // Ignore clicks until current pair is processed
-            return;
+    function checkMatch() {
+      if (revealedCells.length === 2) {
+        const [first, second] = revealedCells;
+        if (first.emoji === second.emoji) {
+          matchedCells.push(first, second);
+          revealedCells = [];
+        } else {
+          setTimeout(() => {
+            revealedCells = [];
+            hideEmojis(4, 4);
+          }, 800);
         }
+      }
+    }
 
-        // Get mouse position relative to canvas
-        const rect = memCanvas.getBoundingClientRect();
-        const x = event.clientX - rect.left;
-        const y = event.clientY - rect.top;
-
-        // Calculate which cell was clicked
-        const col = Math.floor(x / (memCanvas.width / 4));
-        const row = Math.floor(y / (memCanvas.height / 4));
-        const emojiIndex = row * 4 + col;
-
-        // Prevent clicking already matched or already revealed cell
-        if (
-            matchedCells.some(cell => cell.col === col && cell.row === row) ||
-            revealedCells.some(cell => cell.col === col && cell.row === row)
-        ) {
-            return;
-        }
-
-        // Reveal the clicked emoji
-        const emoji = revealEmojiAt(col, row, emojiList);
-        revealedCells.push({col, row, emoji, emojiIndex});
-        clicks += 1;
-
-        // If two emojis are revealed, check for a match
-        if (revealedCells.length === 2) {
-            attempts += 1;
-            attemptsDisplay.textContent = attempts;
-            if (revealedCells[0].emoji === revealedCells[1].emoji) {
-                // Matched, keep revealed and update score
-                score += 1;
-                scoreDisplay.textContent = score;
-                matchedCells.push(revealedCells[0], revealedCells[1]);
-                revealedCells = [];
-                clicks = 0;
-            } else {
-                // Not matched, hide after short delay
-                setTimeout(() => {
-                    hideEmojis(4, 4);
-                    revealedCells = [];
-                    clicks = 0;
-                }, 800);
-            }
-        }
-        if(score == 8) {
-            alert("Congratulations! You've matched all pairs!");
-            // refresh page
-            location.reload();
-        }
+    memCanvas.addEventListener("click", (e) => {
+      const rect = memCanvas.getBoundingClientRect();
+      const x = e.clientX - rect.left;
+      const y = e.clientY - rect.top;
+      const col = Math.floor(x / (memCanvas.width / 4));
+      const row = Math.floor(y / (memCanvas.height / 4));
+      revealEmojiAt(col, row, emojiList);
     });
 
-    // Draw all emojis at the start (for initial reveal)
-    drawEmojis(4, 4, emojiList);
-</script>
+    // Timer
+    function startTimer() {
+      const timerDisplay = document.getElementById("timer");
+      timerId = setInterval(() => {
+        timeLeft--;
+        timerDisplay.textContent = "Time Left: " + timeLeft;
+        if (timeLeft <= 0) {
+          clearInterval(timerId);
+          alert("⏰ Time's up! Game over.");
+        }
+        if (matchedCells.length === emojiList.length) {
+          clearInterval(timerId);
+          alert("🎉 You matched all the animals!");
+        }
+      }, 1000);
+    }
+
+    bgImage.onload = function() {
+      drawBackground();
+      drawGrid(4, 4);
+      setTimeout(() => hideEmojis(4, 4), 2000);
+      startTimer();
+    };
+  </script>
+</body>
+</html>
