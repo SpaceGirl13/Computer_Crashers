@@ -291,5 +291,16 @@ permalink: /snake/
         })();
 
     </script>
+    
+    <footer>
+        <h3>Changes from the Original Snake Game</h3>
+        <ul style="list-style-type: none; padding: 0;">
+            <li>🎨 Background updated to a light purple color with white text for a modern look.</li>
+            <li>🍎 Food is now represented by random fruit emojis instead of plain blocks.</li>
+            <li>🐍 Snake segments are displayed as snake emojis rather than simple squares.</li>
+            <li>🏆 A <strong>High Score</strong> system has been added and is saved using local storage.</li>
+            <li>🖥️ Cleaner UI with centered layout and styled buttons/links.</li>
+        </ul>
+    </footer>
 
 </body>
