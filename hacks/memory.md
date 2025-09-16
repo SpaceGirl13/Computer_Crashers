@@ -192,6 +192,14 @@ permalink: /javascript/project/memory
       setTimeout(() => hideEmojis(4, 4), 2000);
       startTimer();
     };
+
   </script>
+
+  <p class="description"><strong>About this game:</strong></p>
+  <p class="description">I customized this memory game by changing the emojis to Peppa Pig themed animals.<p>
+  <p class="description">Additonally, I customized this memory game by adding a farm-themed background.</p>
+  <p class="description">I also added a flip animation so tiles rotate instead of instantly switching.</p>
+  <p class="description">Finally, I included a 60-second countdown timer to add challenge.</p>
+
 </body>
 </html>
