@@ -16,6 +16,17 @@ permalink: /javascript/project/memory
         text-align: center;
         margin-top: 20px;
     }
+    
+.memoryCanvas {
+    border: 10px solid #000;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    background-image: url('images/farmbackground.jpg'); /* your image path */
+    background-size: cover;  /* make sure it covers the canvas */
+    background-position: center;
+}
+
 </style>
 
 <h2>Memory Game</h2>
@@ -23,6 +34,14 @@ permalink: /javascript/project/memory
 <p>Attempts: <span class="attempts"></span></p>
 <div class="container">
     <canvas class="memoryCanvas" id="memoryCanvas" width="600" height="400"></canvas>
+</div>
+
+<div class="description" style="margin: 20px auto; max-width: 600px; text-align: center;">
+    <h3>About This Project</h3>
+    <p>
+        In this memory game, I changed the emojis to represent the characters in Peppa Pig. (Sheep-Suzy, Horse-Pedro, Dog-Danny, Zebra-Zoey, Elephant-Ellie, Rabbit-Rebecca, Giraffe-Gerald)
+        I also changed the background to a farm setting because most of these animals are farm animals.
+    </p>
 </div>
 
 <script>
