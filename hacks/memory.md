@@ -92,7 +92,7 @@ permalink: /javascript/project/memory
 
     // Prepare emoji pairs and shuffle
     const baseEmojis = [
-        "😀", "🎉", "🍕", "🐶", "🌟", "🚀", "🍎", "🦄"
+        "🐷", "🐑", "🐶", "🐴", "🦓", "🐰", "🦒", "🐘"
     ];
     // Duplicate emojis for pairs (16 cells, 8 pairs)
     const emojiList = [...baseEmojis, ...baseEmojis];
