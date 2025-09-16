@@ -217,9 +217,14 @@ function calculate(first, second) {
     case "^": result = Math.pow(first, second); break;
     default: break;
   }
+  
+  // Round to 10 decimal places to fix floating-point issues
+  result = parseFloat(result.toFixed(10));
+  
   addHistory(`${first} ${operator} ${second} = ${result}`);
   return result;
 }
+
 
 /* --- Equals Button Handling --- */
 equals.forEach(button => {
