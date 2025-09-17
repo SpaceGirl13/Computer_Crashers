@@ -1,7 +1,7 @@
 ---
 layout: opencs
 title: Memory Game
-permalink: /memory-game/
+permalink: /javascript/project/memory
 ---
 
 <!DOCTYPE html>
@@ -178,10 +178,6 @@ permalink: /memory-game/
       revealEmojiAt(col, row, emojiList);
     });
 
-    // Draw all emojis at the start (for initial reveal)
-    drawEmojis(4, 4, emojiList);
-</script>
-
     // Timer
     function startTimer() {
       const timerDisplay = document.getElementById("timer");
@@ -217,4 +213,3 @@ permalink: /memory-game/
 
 </body>
 </html>
->>>>>>> 08196ecfe3f500510c0cd2ba131291437e0e10a7
