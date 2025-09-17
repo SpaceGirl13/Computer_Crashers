@@ -178,12 +178,10 @@ permalink: /javascript/project/memory
       revealEmojiAt(col, row, emojiList);
     });
 
-<<<<<<< HEAD
     // Draw all emojis at the start (for initial reveal)
     drawEmojis(4, 4, emojiList);
 </script>
 
-=======
     // Timer
     function startTimer() {
       const timerDisplay = document.getElementById("timer");
