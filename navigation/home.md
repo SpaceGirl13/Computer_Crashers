@@ -1,5 +1,5 @@
 ---
-layout: home 
+layout: default 
 title: Blogs
 heading: OpenCS Blogs
 subheading: Read these articles to explore our site
