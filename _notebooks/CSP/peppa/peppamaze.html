@@ -7,7 +7,7 @@ permalink: /peppa-maze
 ---
 
 <canvas id="mazeCanvas"></canvas>
-<div id="factBox">🐷 Use keys 1–9 to send Peppa to numbers in the maze!</div>
+<div id="factBox">🐷 Press keys 1–9 to send Peppa to numbers in the maze!</div>
 <div id="linksBox" style="display:none;">
   <h3>🎓 Explore Computer Science:</h3>
   <ul>
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const cellSize = 60; // 10x10 grid
   const rows = 10, cols = 10;
 
-  // Simple maze layout (0 = path, 1 = wall)
+  // Maze layout: 0 = path, 1 = wall
   const maze = [
     [0,0,1,0,0,0,0,1,0,0],
     [1,0,1,0,1,1,0,1,0,1],
@@ -53,6 +53,7 @@ document.addEventListener("DOMContentLoaded", () => {
     [1,1,1,1,1,1,1,1,0,0],
   ];
 
+  // Numbered targets
   const numbers = {
     "1": {x: 1, y: 0},
     "2": {x: 4, y: 0},
@@ -62,19 +63,20 @@ document.addEventListener("DOMContentLoaded", () => {
     "6": {x: 9, y: 4},
     "7": {x: 0, y: 8},
     "8": {x: 5, y: 8},
-    "9": {x: 9, y: 9}, // maze exit
+    "9": {x: 9, y: 9} // exit
   };
 
+  // Fun facts
   const facts = {
-    "1": "💻 Fixing make commands: If make fails, often it’s because the Makefile has a typo or a missing dependency. Run make clean first, then try again.",
-    "2": "🖥️ Using venv: run ./scripts/venv.sh, then source venv/bin/activate",
-    "3": "🌐 Installing ubuntu: You can install Ubuntu alongside Windows using WSL (Windows Subsystem for Linux) or by creating a bootable USB and installing it directly.",
-    "4": "🔐 Installing VScode: Go to code.visualstudio.com, download the installer, and add the recommended extensions for Python, Git, and Markdown.",
-    "5": "🤖 Cloning a directory: To clone a repository from GitHub, copy its HTTPS link and run these commands in your terminal: git clone https://github.com/username/repo.git and cd repo.",
-    "6": "💾 Making a permalink: At the top of your .md file, add YAML front matter and add permalink: with something like /maze/.",
-    "7": "📱 Pushing to Github: Save all changes made in your code, stage all changes, name your change, press 'Commit & Push'.",
-    "8": "⚡ Changing the theme in VScode: type make whatever theme you what (i.e. minima, cayman) in your local host terminal.",
-    "9": "🎉 You completed the maze! To add directories or files to your own repository: Drag and drop the directory or file into your own."
+    "1": "💻 Fixing make commands: Run `make clean` first, then `make` again to clear old builds.",
+    "2": "🐍 To activate venv: On Windows run `venv\\Scripts\\activate`, on Mac/Linux run `source venv/bin/activate`.",
+    "3": "🌐 Installing Ubuntu: Use WSL on Windows (`wsl --install`) or a bootable USB for dual-boot.",
+    "4": "🔧 Installing VS Code: Download from code.visualstudio.com and add Python & GitHub extensions.",
+    "5": "🤖 Cloning a repo: `git clone https://github.com/username/repo.git` then `cd repo`.",
+    "6": "💾 Making a permalink: Add `permalink: /page-name/` in your Markdown front matter.",
+    "7": "📤 Pushing to GitHub: `git add .`, `git commit -m 'message'`, `git push origin main`.",
+    "8": "🎨 Changing theme in VS Code: Press `Ctrl+K Ctrl+T` and pick a theme.",
+    "9": "🎉 You finished the maze! Great job — check out the links below to learn more!"
   };
 
   const factBox = document.getElementById("factBox");
@@ -90,7 +92,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function drawMaze() {
     for (let y=0; y<rows; y++) {
       for (let x=0; x<cols; x++) {
-        ctx.fillStyle = maze[y][x] === 1 ? "#333" : "#fff";
+        ctx.fillStyle = maze[y][x] === 1 ? "#444" : "#fff";
         ctx.fillRect(x*cellSize, y*cellSize, cellSize, cellSize);
         ctx.strokeRect(x*cellSize, y*cellSize, cellSize, cellSize);
       }
@@ -117,35 +119,57 @@ document.addEventListener("DOMContentLoaded", () => {
     requestAnimationFrame(update);
   }
 
-  peppaImg.onload = () => {
-    update();
-  };
+  peppaImg.onload = () => update();
 
-  function movePeppaTowardTarget() {
-    if (!target) return;
-    if (peppa.x < target.x) peppa.x++;
-    else if (peppa.x > target.x) peppa.x--;
-    else if (peppa.y < target.y) peppa.y++;
-    else if (peppa.y > target.y) peppa.y--;
+  // Pathfinding with BFS so Peppa avoids walls
+  function findPath(start, end) {
+    const queue = [[start]];
+    const visited = new Set([`${start.x},${start.y}`]);
 
-    if (peppa.x === target.x && peppa.y === target.y) {
-      const num = Object.keys(numbers).find(k => numbers[k].x === target.x && numbers[k].y === target.y);
-      if (num) {
-        factBox.textContent = facts[num];
-        if (num === "9") {
-          linksBox.style.display = "block";
+    while (queue.length > 0) {
+      const path = queue.shift();
+      const {x,y} = path[path.length-1];
+
+      if (x === end.x && y === end.y) return path;
+
+      const moves = [
+        {x:x+1,y}, {x:x-1,y}, {x,y:y+1}, {x,y:y-1}
+      ];
+      for (const m of moves) {
+        if (
+          m.x >= 0 && m.x < cols &&
+          m.y >= 0 && m.y < rows &&
+          maze[m.y][m.x] === 0 &&
+          !visited.has(`${m.x},${m.y}`)
+        ) {
+          visited.add(`${m.x},${m.y}`);
+          queue.push([...path, m]);
         }
       }
-      target = null;
-    } else {
-      setTimeout(movePeppaTowardTarget, 300);
     }
+    return null;
+  }
+
+  function movePeppa(path, num) {
+    if (!path || path.length === 0) return;
+    let step = 0;
+    function stepMove() {
+      if (step < path.length) {
+        peppa = path[step];
+        step++;
+        setTimeout(stepMove, 300);
+      } else {
+        factBox.textContent = facts[num];
+        if (num === "9") linksBox.style.display = "block";
+      }
+    }
+    stepMove();
   }
 
   document.addEventListener("keydown", (e) => {
     if (numbers[e.key]) {
-      target = numbers[e.key];
-      movePeppaTowardTarget();
+      const path = findPath(peppa, numbers[e.key]);
+      movePeppa(path, e.key);
     }
   });
 });
