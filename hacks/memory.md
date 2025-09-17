@@ -202,3 +202,4 @@ permalink: /javascript/project/memory
     // Draw all emojis at the start (for initial reveal)
     drawEmojis(4, 4, emojiList);
 </script>
+
