@@ -73,6 +73,17 @@ class EnhancedPlayer(Player):
     def add_win(self):
         self.wins += 1
         print(f"{self.name} now has {self.wins} wins!")
+
+    def peppa_message(self, position):
+        peppa_squares = {
+            5: "Oink! You landed on the muddy puddle! Splish splash!",
+            2: "Hee hee! Peppa loves jumping up and down in muddy puddles!",
+            7: "George loves dinosaurs! But this is Peppa's square!",
+        }
+        message = peppa_squares.get(position)
+        if message:
+            print(f"\n📢 Peppa Pig says: \"{message}\"\n")
+
 def main():
     print("Welcome to Peppa and George's Tic-Tac-Toe!🐷\n")
 
@@ -87,13 +98,13 @@ def main():
         game = TicTacToe(player1, player2)
         game.board.display_reference()
         game.board.display()
-
         while True:
             try:
                 move = int(input(f"{game.current_player.name} ({game.current_player.symbol}), enter your move (1-9): "))
             except ValueError:
                 print("Please enter a valid number.")
                 continue
+            game.current_player.peppa_message(move)
 
             if not game.board.make_move(move, game.current_player.symbol):
                 continue
