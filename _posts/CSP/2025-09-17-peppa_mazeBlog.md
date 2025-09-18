@@ -3,6 +3,7 @@ layout: default
 title: "Peppa Pig Maze"
 description: "Guide Peppa Pig through a maze to learn CS fun facts"
 permalink: /peppa-maze/blog/
+comments: false
 ---
 
 # **Building an Interactive Learning Experience: Peppa Pig in a Maze**
@@ -79,11 +80,11 @@ function movePeppa(direction) {
       break;
   }
 }
+```
 
 ## **4. Handling User Movement and Fact Reveal**
 
-```
-javascript
+```javascript
 function movePeppa(path, num) {
   if (!path) return;
   let step = 0;
