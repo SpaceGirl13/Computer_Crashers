@@ -3,7 +3,7 @@ title: "Python Virtual Environments: Real-World Workflow Guide"
 date: 2025-09-15
 author: ComputerCrashers
 tags: ["python", "venv", "workflow", "automation", "vscode", "development"]
-permalink: /lxd/setup/venv
+permalink: /peppa-maze/lxd/setup/venv
 ---
 
 # Python Virtual Environments: Real-World Workflow Guide

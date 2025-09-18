@@ -3,7 +3,7 @@ title: "Complete Windows Development Setup Guide: From Zero to Coding"
 date: 2025-09-15
 author: ComputerCrashers
 tags: ["windows", "setup", "development", "git",  "vscode", "beginner"]
-permalink: /lxd/setup/windows
+permalink: /peppa-maze/lxd/setup/windows
 ---
 
 ## Essential Terminal Commands You Need to Know

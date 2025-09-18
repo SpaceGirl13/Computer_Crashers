@@ -3,7 +3,7 @@ title: "Using Make"
 date: 2025-09-15
 author: ComputerCrashers
 tags: ["tools", "setup", "vscode", "git", "learning-experience-design"]
-permalink: /lxd/setup/make
+permalink: /peppa-maze/lxd/setup/make
 ---
 
 # Introduction to GNU Make: How It Works and Basic Commands
