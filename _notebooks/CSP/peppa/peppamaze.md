@@ -72,7 +72,15 @@ document.addEventListener("DOMContentLoaded", () => {
   const peppaImg=new Image();
   peppaImg.src="{{ '/images/peppapig.png' | relative_url }}";
 
+  // ✅ Background image
+  const bgImg = new Image();
+  bgImg.src = "{{ images/blankpeppa.png' | relative_url }}"; // replace with your background image
+
   let peppa={x:0,y:0};
+
+  function drawBackground() {
+    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+  }
 
   function drawMaze(){
     for(let y=0;y<rows;y++){
@@ -94,11 +102,17 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function update(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-    drawMaze(); drawPeppa();
+    if (bgImg.complete) {
+      drawBackground();   // ✅ background first
+    }
+    drawMaze(); 
+    drawPeppa();
     requestAnimationFrame(update);
   }
 
-  peppaImg.onload=()=>update();
+  // load triggers
+  bgImg.onload = () => update();
+  peppaImg.onload = () => update();
 
   function findPath(start,end){
     const q=[[start]],vis=new Set([`${start.x},${start.y}`]);
