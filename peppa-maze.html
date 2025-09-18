@@ -1,0 +1,211 @@
+---
+layout: default
+title: "Peppa Pig Maze"
+description: "Guide Peppa Pig through a maze to learn CS fun facts"
+permalink: /peppa-maze/
+---
+
+<style>
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+  }
+
+  canvas {
+    border: 2px solid black;
+    display: block;
+    margin: 20px auto;
+    background: #f0f0f0;
+  }
+
+  #factBox,
+  #linksBox {
+    margin: 10px auto;
+    padding: 10px;
+    width: 80%;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0 3px 6px rgba(0, 0, 0, 0.3);
+  }
+
+  #linksBox {
+    display: none;
+  }
+
+  #factBox code {
+    background: #eee;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-family: monospace;
+  }
+</style>
+
+<div id="gameContainer"></div>
+
+<script>
+  function createPeppaMaze(containerId) {
+    const container = document.getElementById(containerId);
+
+    // Create DOM structure
+    container.innerHTML = `
+    <canvas id="mazeCanvas"></canvas>
+    <div id="factBox">🐷 Press keys 1–9 to send Peppa to numbers in the maze!</div>
+    <div id="linksBox">
+      <h3>🎓 Explore Computer Science:</h3>
+      <ul>
+        <li><a href="Computer_Crashers/lxd/setup/mac" target="_blank">LxD Setup on Mac</a></li>
+        <li><a href="Computer_Crashers/lxd/setup/make" target="_blank">LxD Setup for Make</a></li>
+        <li><a href="Computer_Crashers/lxd/setup/windows" target="_blank">LxD Setup on Windows</a></li>
+        <li><a href="Computer_Crashers/lxd/setup/venv" target="_blank">LxD Setup for venv</a></li>
+      </ul>
+    </div>
+  `;
+
+    const canvas = container.querySelector("#mazeCanvas");
+    const ctx = canvas.getContext("2d");
+    const factBox = container.querySelector("#factBox");
+    const linksBox = container.querySelector("#linksBox");
+
+    canvas.width = 600;
+    canvas.height = 600;
+
+    const cellSize = 60;
+    const rows = 10;
+    const cols = 10;
+
+    const maze = [
+      [0, 0, 1, 0, 0, 0, 0, 1, 0, 0],
+      [1, 0, 1, 0, 1, 1, 0, 1, 0, 1],
+      [0, 0, 0, 0, 0, 1, 0, 0, 0, 0],
+      [0, 1, 1, 1, 0, 1, 1, 1, 1, 0],
+      [0, 0, 0, 1, 0, 0, 0, 1, 0, 0],
+      [0, 1, 0, 1, 1, 1, 0, 1, 0, 1],
+      [0, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+      [0, 1, 1, 1, 1, 1, 1, 1, 1, 0],
+      [0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+      [1, 1, 1, 1, 1, 1, 1, 1, 0, 0]
+    ];
+
+    const numbers = {
+      "1": { x: 1, y: 0 }, "2": { x: 4, y: 0 }, "3": { x: 8, y: 0 },
+      "4": { x: 0, y: 4 }, "5": { x: 5, y: 4 }, "6": { x: 9, y: 4 },
+      "7": { x: 0, y: 8 }, "8": { x: 5, y: 8 }, "9": { x: 9, y: 9 }
+    };
+
+    const facts = {
+      "1": "💻 Run <code>make clean</code> then <code>make</code> to fix builds.",
+      "2": "🐍 Activate venv:<br>Windows → <code>venv\\Scripts\\activate</code><br>Mac/Linux → <code>source venv/bin/activate</code>.",
+      "3": "🌐 Install Ubuntu: <code>wsl --install</code> or bootable USB.",
+      "4": "🔧 Install VS Code and extensions.",
+      "5": "🤖 Clone repos with <code>git clone ...</code>.",
+      "6": "💾 Permalink: add <code>permalink: /page/</code> in front matter.",
+      "7": "📤 Push to GitHub:<br><code>git add .</code><br><code>git commit -m</code><br><code>git push origin main</code>.",
+      "8": "🎨 Change theme in VS Code: <code>Ctrl+K Ctrl+T</code>.",
+      "9": "🎉 Finished the maze! Explore links below."
+    };
+
+
+    let peppa = { x: 0, y: 0 };
+
+    function drawMaze() {
+      for (let y = 0; y < rows; y++) {
+        for (let x = 0; x < cols; x++) {
+          ctx.fillStyle = maze[y][x] === 1 ? "#444" : "#fff";
+          ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+          ctx.strokeStyle = "#000";
+          ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        }
+      }
+      ctx.fillStyle = "blue";
+      ctx.font = "20px Arial";
+      ctx.textAlign = "center";
+      ctx.textBaseline = "middle";
+      for (const num in numbers) {
+        const pos = numbers[num];
+        ctx.fillText(num, pos.x * cellSize + cellSize / 2, pos.y * cellSize + cellSize / 2);
+      }
+    }
+
+    function drawPeppa() {
+      ctx.fillStyle = "#ff69b4";
+      ctx.beginPath();
+      ctx.arc(
+        peppa.x * cellSize + cellSize / 2,
+        peppa.y * cellSize + cellSize / 2,
+        cellSize / 3,
+        0,
+        2 * Math.PI
+      );
+      ctx.fill();
+      ctx.fillStyle = "#000";
+      ctx.beginPath();
+      ctx.arc(peppa.x * cellSize + cellSize / 2 - 5, peppa.y * cellSize + cellSize / 2 - 5, 2, 0, 2 * Math.PI);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(peppa.x * cellSize + cellSize / 2 + 5, peppa.y * cellSize + cellSize / 2 - 5, 2, 0, 2 * Math.PI);
+      ctx.fill();
+    }
+
+    function update() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      drawMaze();
+      drawPeppa();
+      requestAnimationFrame(update);
+    }
+
+    function findPath(start, end) {
+      const queue = [[start]];
+      const visited = new Set([`${start.x},${start.y}`]);
+      while (queue.length) {
+        const path = queue.shift();
+        const current = path[path.length - 1];
+        if (current.x === end.x && current.y === end.y) return path;
+        const moves = [
+          { x: current.x + 1, y: current.y },
+          { x: current.x - 1, y: current.y },
+          { x: current.x, y: current.y + 1 },
+          { x: current.x, y: current.y - 1 }
+        ];
+        for (const move of moves) {
+          if (move.x >= 0 && move.x < cols &&
+            move.y >= 0 && move.y < rows &&
+            maze[move.y][move.x] === 0 &&
+            !visited.has(`${move.x},${move.y}`)) {
+            visited.add(`${move.x},${move.y}`);
+            queue.push([...path, move]);
+          }
+        }
+      }
+      return null;
+    }
+
+    function movePeppa(path, num) {
+      if (!path) return;
+      let step = 0;
+      function stepMove() {
+        if (step < path.length) {
+          peppa = path[step];
+          step++;
+          setTimeout(stepMove, 300);
+        } else {
+          factBox.innerHTML = facts[num];
+          if (num === "9") linksBox.style.display = "block";
+        }
+      }
+      stepMove();
+    }
+
+    update();
+
+    document.addEventListener("keydown", function (e) {
+      if (numbers[e.key]) {
+        const path = findPath(peppa, numbers[e.key]);
+        movePeppa(path, e.key);
+      }
+    });
+  }
+
+  // Initialize
+  createPeppaMaze("gameContainer");
+</script>
