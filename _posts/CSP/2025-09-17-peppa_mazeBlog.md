@@ -128,7 +128,7 @@ Even though we were exposed to new coding and development skills, we also learne
 ---
 
 ### **User input**
-As we spoke with our peers, they gave us thoughtful input on how to make our game more engaging. They suggested adding a background and making our fun facts more entertaining. Based on their feedback, we redesigned the maze into a hay maze set on a farm, which added a playful and thematic touch. We also updated our educational content to include more relevant and interesting facts, moving away from dry syntax explanations and toward material that felt more connected to the gameplay experience. 
+As we spoke with our peers, they gave us thoughtful input on how to make our game more engaging. They suggested adding a background and making our fun facts more entertaining. Based on their feedback, we redesigned the maze into a maze set on a farm, which added a playful and thematic touch. We also updated our educational content to include more relevant and interesting facts, moving away from dry syntax explanations and toward material that felt more connected to the gameplay experience. 
 
 ---
 
