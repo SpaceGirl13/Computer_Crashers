@@ -2,7 +2,7 @@
 layout: default
 title: Peppa Pig Maze
 description: Guide Peppa Pig through a maze to learn CS fun facts
-background: images/blankpeppa.png   
+background: images/peppapigducks.jpg   
 permalink: /peppa-maze/
 ---
 
@@ -19,7 +19,7 @@ permalink: /peppa-maze/
 </div>
 
 <style>
-  body { margin: 0; font-family: Arial, sans-serif; text-align: center; }
+  body { margin: 0; font-family: Arial, sans-serif; text-align: center; background: #87CEEB; }
   #mazeCanvas { border: 2px solid black; display: block; margin: 20px auto; background: #f0f0f0; }
   #factBox, #linksBox {
     margin: 10px auto; padding: 10px; width: 80%;
@@ -67,89 +67,147 @@ document.addEventListener("DOMContentLoaded", () => {
     "9":"🎉 Finished the maze! Explore links below."
   };
 
-
-// Background image
-const bgImg = new Image();
-bgImg.src = "/images/blankpeppa.png";  // <-- your uploaded file path
-
-// Draw background
-function drawBackground() {
-  ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-}
-
-// Draw maze (transparent paths, solid walls)
-function drawMaze() {
-  for (let y = 0; y < rows; y++) {
-    for (let x = 0; x < cols; x++) {
-      if (maze[y][x] === 1) {
-        ctx.fillStyle = "#444"; // walls
-        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
-      }
-      ctx.strokeStyle = "#000"; // grid
-      ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
-    }
-  }
-  // Draw numbers
-  ctx.fillStyle = "blue";
-  ctx.font = "20px Arial";
-  ctx.textAlign = "center";
-  ctx.textBaseline = "middle";
-  for (const num in numbers) {
-    const pos = numbers[num];
-    ctx.fillText(
-      num,
-      pos.x * cellSize + cellSize / 2,
-      pos.y * cellSize + cellSize / 2
-    );
-  }
-}
-
-// Draw Peppa (pink circle for now)
-function drawPeppa() {
-  ctx.beginPath();
-  ctx.arc(
-    peppa.x * cellSize + cellSize / 2,
-    peppa.y * cellSize + cellSize / 2,
-    cellSize / 3,
-    0,
-    Math.PI * 2
-  );
-  ctx.fillStyle = "pink";
-  ctx.fill();
-  ctx.closePath();
-}
-
-// Show fun facts
-function showFact(num) {
   const factBox = document.getElementById("factBox");
-  factBox.textContent = funFacts[num] || "🐷 Oink! No fact here.";
-}
+  const linksBox = document.getElementById("linksBox");
 
-// Handle keypress
-document.addEventListener("keydown", (e) => {
-  if (e.key >= "1" && e.key <= "9") {
-    const pos = numbers[e.key];
-    if (pos) {
-      peppa.x = pos.x;
-      peppa.y = pos.y;
-      showFact(e.key);
-      if (e.key === "9") {
-        document.getElementById("linksBox").style.display = "block";
-      }
+  // Create separate images for background and Peppa
+  const bgImg = new Image();
+  const peppaImg = new Image();
+  
+  // Set image sources - make sure these paths are correct
+  bgImg.src = "{{ 'images/peppapigducks.jpg' | relative_url }}";
+  peppaImg.src = "{{ 'images/peppapigducks.jpg' | relative_url }}"; // This should be a different image for Peppa
+
+  let peppa = {x:0, y:0};
+
+  function drawBackground() {
+    if (bgImg.complete) {
+      // Draw the background image to cover the entire canvas
+      ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+    } else {
+      // Fallback if image doesn't load
+      ctx.fillStyle = "#87CEEB"; // Sky blue
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
   }
-});
 
-// Game loop
-function update(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  if (bgImg.complete) {
-    drawBackground();
+  function drawMaze(){
+    // Draw semi-transparent maze cells over the background
+    for(let y = 0; y < rows; y++){
+      for(let x = 0; x < cols; x++){
+        ctx.fillStyle = maze[y][x] === 1 ? "rgba(68, 68, 68, 0.7)" : "rgba(255, 255, 255, 0.7)";
+        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        ctx.strokeStyle = "#000"; 
+        ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
+      }
+    }
+    
+    // Draw numbers
+    ctx.fillStyle = "blue"; 
+    ctx.font = "20px Arial";
+    ctx.textAlign = "center"; 
+    ctx.textBaseline = "middle";
+    for(const num in numbers){
+      const pos = numbers[num];
+      ctx.fillText(num, pos.x * cellSize + cellSize / 2, pos.y * cellSize + cellSize / 2);
+    }
   }
-  drawMaze();
-  drawPeppa();
-  requestAnimationFrame(update);
-}
 
-bgImg.onload = () => update();
+  function drawPeppa(){ 
+    if (peppaImg.complete) {
+      ctx.drawImage(peppaImg, peppa.x * cellSize, peppa.y * cellSize, cellSize, cellSize);
+    } else {
+      // Fallback if Peppa image doesn't load
+      ctx.fillStyle = "pink";
+      ctx.beginPath();
+      ctx.arc(peppa.x * cellSize + cellSize/2, peppa.y * cellSize + cellSize/2, cellSize/2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
+
+  function update(){
+    // Clear the canvas
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw background
+    drawBackground();
+    
+    // Draw maze on top
+    drawMaze();
+    
+    // Draw Peppa on top of everything
+    drawPeppa();
+    
+    requestAnimationFrame(update);
+  }
+
+  // Start the animation once images are loaded
+  let imagesLoaded = 0;
+  const totalImages = 2;
+  
+  function checkAllImagesLoaded() {
+    imagesLoaded++;
+    if (imagesLoaded === totalImages) {
+      update();
+    }
+  }
+  
+  bgImg.onload = checkAllImagesLoaded;
+  bgImg.onerror = function() {
+    console.error("Background image failed to load");
+    checkAllImagesLoaded();
+  };
+  
+  peppaImg.onload = checkAllImagesLoaded;
+  peppaImg.onerror = function() {
+    console.error("Peppa image failed to load");
+    checkAllImagesLoaded();
+  };
+
+  // If images are already loaded (cached), trigger load manually
+  if (bgImg.complete && peppaImg.complete) {
+    update();
+  }
+
+  function findPath(start, end){
+    const q = [[start]], vis = new Set([`${start.x},${start.y}`]);
+    while(q.length){
+      const path = q.shift(); 
+      const {x, y} = path[path.length-1];
+      if(x === end.x && y === end.y) return path;
+      for(const m of [{x:x+1,y}, {x:x-1,y}, {x, y:y+1}, {x, y:y-1}]){
+        if(m.x >= 0 && m.x < cols && m.y >= 0 && m.y < rows && 
+           maze[m.y][m.x] === 0 && !vis.has(`${m.x},${m.y}`)){
+          vis.add(`${m.x},${m.y}`); 
+          q.push([...path, m]);
+        }
+      }
+    } 
+    return null;
+  }
+
+  function movePeppa(path, num){
+    if(!path) return; 
+    let step = 0;
+    
+    function stepMove(){
+      if(step < path.length){ 
+        peppa = path[step]; 
+        step++; 
+        setTimeout(stepMove, 300);
+      } else { 
+        factBox.textContent = facts[num]; 
+        if(num === "9") linksBox.style.display = "block"; 
+      }
+    } 
+    stepMove();
+  }
+
+  document.addEventListener("keydown", e => {
+    if(numbers[e.key]){ 
+      const path = findPath(peppa, numbers[e.key]); 
+      movePeppa(path, e.key); 
+    }
+  });
+});
 </script>
