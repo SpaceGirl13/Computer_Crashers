@@ -18,11 +18,24 @@ permalink: /peppa-maze/
 </div>
 
 <style>
-  body { margin: 0; font-family: Arial, sans-serif; text-align: center; }
-  #mazeCanvas { border: 2px solid black; display: block; margin: 20px auto; background: #f0f0f0; }
+  body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    background: #87CEEB;
+  }
+  #mazeCanvas {
+    border: 2px solid black;
+    display: block;
+    margin: 20px auto;
+    background: #f0f0f0;
+  }
   #factBox, #linksBox {
-    margin: 10px auto; padding: 10px; width: 80%;
-    background: rgba(255,255,255,0.9); border-radius: 10px;
+    margin: 10px auto;
+    padding: 10px;
+    width: 80%;
+    background: rgba(255,255,255,0.9);
+    border-radius: 10px;
     box-shadow: 0 3px 6px rgba(0,0,0,0.3);
   }
 </style>
@@ -66,77 +79,121 @@ document.addEventListener("DOMContentLoaded", () => {
     "9":"🎉 Finished the maze! Explore links below."
   };
 
-  const factBox=document.getElementById("factBox");
-  const linksBox=document.getElementById("linksBox");
+  const factBox = document.getElementById("factBox");
+  const linksBox = document.getElementById("linksBox");
 
-  const peppaImg=new Image();
-  peppaImg.src="{{ '/images/peppapig.png' | relative_url }}";
-
-  // ✅ Background image
+  // Background and Peppa images
   const bgImg = new Image();
-  bgImg.src = "{{ images/blankpeppa.png' | relative_url }}"; // replace with your background image
+  const peppaImg = new Image();
 
-  let peppa={x:0,y:0};
+  bgImg.src = "{{ '/images/peppapigducks.jpg' | relative_url }}";  // Background
+  peppaImg.src = "{{ '/images/peppa.png' | relative_url }}";       // Peppa (replace with your actual file)
+
+  let peppa = {x:0, y:0};
 
   function drawBackground() {
-    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+    if (bgImg.complete) {
+      ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+    } else {
+      ctx.fillStyle = "#87CEEB"; 
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
+    }
   }
 
   function drawMaze(){
-    for(let y=0;y<rows;y++){
-      for(let x=0;x<cols;x++){
-        ctx.fillStyle=maze[y][x]===1?"#444":"#fff";
-        ctx.fillRect(x*cellSize,y*cellSize,cellSize,cellSize);
-        ctx.strokeStyle="#000"; ctx.strokeRect(x*cellSize,y*cellSize,cellSize,cellSize);
+    for(let y = 0; y < rows; y++){
+      for(let x = 0; x < cols; x++){
+        ctx.fillStyle = maze[y][x] === 1 ? "rgba(68, 68, 68, 0.7)" : "rgba(255, 255, 255, 0.7)";
+        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+        ctx.strokeStyle = "#000";
+        ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
       }
     }
-    ctx.fillStyle="blue"; ctx.font="20px Arial";
-    ctx.textAlign="center"; ctx.textBaseline="middle";
+    ctx.fillStyle = "blue";
+    ctx.font = "20px Arial";
+    ctx.textAlign = "center";
+    ctx.textBaseline = "middle";
     for(const num in numbers){
-      const pos=numbers[num];
-      ctx.fillText(num,pos.x*cellSize+cellSize/2,pos.y*cellSize+cellSize/2);
+      const pos = numbers[num];
+      ctx.fillText(num, pos.x * cellSize + cellSize / 2, pos.y * cellSize + cellSize / 2);
     }
   }
 
-  function drawPeppa(){ ctx.drawImage(peppaImg,peppa.x*cellSize,peppa.y*cellSize,cellSize,cellSize); }
+  function drawPeppa(){
+    if (peppaImg.complete) {
+      ctx.drawImage(peppaImg, peppa.x * cellSize, peppa.y * cellSize, cellSize, cellSize);
+    } else {
+      ctx.fillStyle = "pink";
+      ctx.beginPath();
+      ctx.arc(peppa.x * cellSize + cellSize/2, peppa.y * cellSize + cellSize/2, cellSize/2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+  }
 
   function update(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    if (bgImg.complete) {
-      drawBackground();   // ✅ background first
-    }
-    drawMaze(); 
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    drawBackground();
+    drawMaze();
     drawPeppa();
     requestAnimationFrame(update);
   }
 
-  // load triggers
-  bgImg.onload = () => update();
-  peppaImg.onload = () => update();
+  let imagesLoaded = 0;
+  const totalImages = 2;
+  function checkAllImagesLoaded() {
+    imagesLoaded++;
+    if (imagesLoaded === totalImages) {
+      update();
+    }
+  }
 
-  function findPath(start,end){
-    const q=[[start]],vis=new Set([`${start.x},${start.y}`]);
+  bgImg.onload = checkAllImagesLoaded;
+  bgImg.onerror = () => { console.error("Background image failed to load"); checkAllImagesLoaded(); };
+  peppaImg.onload = checkAllImagesLoaded;
+  peppaImg.onerror = () => { console.error("Peppa image failed to load"); checkAllImagesLoaded(); };
+
+  if (bgImg.complete && peppaImg.complete) {
+    update();
+  }
+
+  function findPath(start, end){
+    const q = [[start]], vis = new Set([`${start.x},${start.y}`]);
     while(q.length){
-      const path=q.shift(); const {x,y}=path[path.length-1];
-      if(x===end.x&&y===end.y) return path;
-      for(const m of[{x:x+1,y},{x:x-1,y},{x,y:y+1},{x,y:y-1}]){
-        if(m.x>=0&&m.x<cols&&m.y>=0&&m.y<rows&&maze[m.y][m.x]===0&&!vis.has(`${m.x},${m.y}`)){
-          vis.add(`${m.x},${m.y}`); q.push([...path,m]);
+      const path = q.shift();
+      const {x, y} = path[path.length-1];
+      if(x === end.x && y === end.y) return path;
+      for(const m of [{x:x+1,y}, {x:x-1,y}, {x, y:y+1}, {x, y:y-1}]){
+        if(m.x >= 0 && m.x < cols && m.y >= 0 && m.y < rows &&
+           maze[m.y][m.x] === 0 && !vis.has(`${m.x},${m.y}`)){
+          vis.add(`${m.x},${m.y}`);
+          q.push([...path, m]);
         }
       }
-    } return null;
+    }
+    return null;
   }
 
-  function movePeppa(path,num){
-    if(!path) return; let step=0;
+  function movePeppa(path, num){
+    if(!path) return;
+    let step = 0;
     function stepMove(){
-      if(step<path.length){ peppa=path[step]; step++; setTimeout(stepMove,300);}
-      else{ factBox.textContent=facts[num]; if(num==="9") linksBox.style.display="block"; }
-    } stepMove();
+      if(step < path.length){
+        peppa = path[step];
+        step++;
+        setTimeout(stepMove, 300);
+      } else {
+        factBox.textContent = facts[num];
+        if(num === "9") linksBox.style.display = "block";
+      }
+    }
+    stepMove();
   }
 
-  document.addEventListener("keydown",e=>{
-    if(numbers[e.key]){ const path=findPath(peppa,numbers[e.key]); movePeppa(path,e.key); }
+  document.addEventListener("keydown", e => {
+    if(numbers[e.key]){
+      const path = findPath(peppa, numbers[e.key]);
+      movePeppa(path, e.key);
+    }
   });
 });
 </script>
