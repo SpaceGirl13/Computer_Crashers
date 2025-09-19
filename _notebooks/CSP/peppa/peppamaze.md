@@ -2,6 +2,7 @@
 layout: default
 title: Peppa Pig Maze
 description: Guide Peppa Pig through a maze to learn CS fun facts
+background: images/blankpeppa.png   
 permalink: /peppa-maze/
 ---
 
@@ -66,77 +67,89 @@ document.addEventListener("DOMContentLoaded", () => {
     "9":"🎉 Finished the maze! Explore links below."
   };
 
-  const factBox=document.getElementById("factBox");
-  const linksBox=document.getElementById("linksBox");
 
-  const peppaImg=new Image();
-  peppaImg.src="{{ '/images/peppapig.png' | relative_url }}";
+// Background image
+const bgImg = new Image();
+bgImg.src = "/images/blankpeppa.png";  // <-- your uploaded file path
 
-  // ✅ Background image
-  const bgImg = new Image();
-  bgImg.src = "{{ images/blankpeppa.png' | relative_url }}"; // replace with your background image
+// Draw background
+function drawBackground() {
+  ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+}
 
-  let peppa={x:0,y:0};
-
-  function drawBackground() {
-    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
+// Draw maze (transparent paths, solid walls)
+function drawMaze() {
+  for (let y = 0; y < rows; y++) {
+    for (let x = 0; x < cols; x++) {
+      if (maze[y][x] === 1) {
+        ctx.fillStyle = "#444"; // walls
+        ctx.fillRect(x * cellSize, y * cellSize, cellSize, cellSize);
+      }
+      ctx.strokeStyle = "#000"; // grid
+      ctx.strokeRect(x * cellSize, y * cellSize, cellSize, cellSize);
+    }
   }
+  // Draw numbers
+  ctx.fillStyle = "blue";
+  ctx.font = "20px Arial";
+  ctx.textAlign = "center";
+  ctx.textBaseline = "middle";
+  for (const num in numbers) {
+    const pos = numbers[num];
+    ctx.fillText(
+      num,
+      pos.x * cellSize + cellSize / 2,
+      pos.y * cellSize + cellSize / 2
+    );
+  }
+}
 
-  function drawMaze(){
-    for(let y=0;y<rows;y++){
-      for(let x=0;x<cols;x++){
-        ctx.fillStyle=maze[y][x]===1?"#444":"#fff";
-        ctx.fillRect(x*cellSize,y*cellSize,cellSize,cellSize);
-        ctx.strokeStyle="#000"; ctx.strokeRect(x*cellSize,y*cellSize,cellSize,cellSize);
+// Draw Peppa (pink circle for now)
+function drawPeppa() {
+  ctx.beginPath();
+  ctx.arc(
+    peppa.x * cellSize + cellSize / 2,
+    peppa.y * cellSize + cellSize / 2,
+    cellSize / 3,
+    0,
+    Math.PI * 2
+  );
+  ctx.fillStyle = "pink";
+  ctx.fill();
+  ctx.closePath();
+}
+
+// Show fun facts
+function showFact(num) {
+  const factBox = document.getElementById("factBox");
+  factBox.textContent = funFacts[num] || "🐷 Oink! No fact here.";
+}
+
+// Handle keypress
+document.addEventListener("keydown", (e) => {
+  if (e.key >= "1" && e.key <= "9") {
+    const pos = numbers[e.key];
+    if (pos) {
+      peppa.x = pos.x;
+      peppa.y = pos.y;
+      showFact(e.key);
+      if (e.key === "9") {
+        document.getElementById("linksBox").style.display = "block";
       }
     }
-    ctx.fillStyle="blue"; ctx.font="20px Arial";
-    ctx.textAlign="center"; ctx.textBaseline="middle";
-    for(const num in numbers){
-      const pos=numbers[num];
-      ctx.fillText(num,pos.x*cellSize+cellSize/2,pos.y*cellSize+cellSize/2);
-    }
   }
-
-  function drawPeppa(){ ctx.drawImage(peppaImg,peppa.x*cellSize,peppa.y*cellSize,cellSize,cellSize); }
-
-  function update(){
-    ctx.clearRect(0,0,canvas.width,canvas.height);
-    if (bgImg.complete) {
-      drawBackground();   // ✅ background first
-    }
-    drawMaze(); 
-    drawPeppa();
-    requestAnimationFrame(update);
-  }
-
-  // load triggers
-  bgImg.onload = () => update();
-  peppaImg.onload = () => update();
-
-  function findPath(start,end){
-    const q=[[start]],vis=new Set([`${start.x},${start.y}`]);
-    while(q.length){
-      const path=q.shift(); const {x,y}=path[path.length-1];
-      if(x===end.x&&y===end.y) return path;
-      for(const m of[{x:x+1,y},{x:x-1,y},{x,y:y+1},{x,y:y-1}]){
-        if(m.x>=0&&m.x<cols&&m.y>=0&&m.y<rows&&maze[m.y][m.x]===0&&!vis.has(`${m.x},${m.y}`)){
-          vis.add(`${m.x},${m.y}`); q.push([...path,m]);
-        }
-      }
-    } return null;
-  }
-
-  function movePeppa(path,num){
-    if(!path) return; let step=0;
-    function stepMove(){
-      if(step<path.length){ peppa=path[step]; step++; setTimeout(stepMove,300);}
-      else{ factBox.textContent=facts[num]; if(num==="9") linksBox.style.display="block"; }
-    } stepMove();
-  }
-
-  document.addEventListener("keydown",e=>{
-    if(numbers[e.key]){ const path=findPath(peppa,numbers[e.key]); movePeppa(path,e.key); }
-  });
 });
+
+// Game loop
+function update(){
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  if (bgImg.complete) {
+    drawBackground();
+  }
+  drawMaze();
+  drawPeppa();
+  requestAnimationFrame(update);
+}
+
+bgImg.onload = () => update();
 </script>
