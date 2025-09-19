@@ -46,7 +46,6 @@ In the early stages, we wanted to keep the concept simple yet effective. We focu
 We considered several frameworks and languages for building the game, including:
 - **HTML/CSS** for basic layout and styling.
 - **JavaScript** for game logic and interactivity.
-- **Canvas API** for rendering the maze and Peppa Pig’s movements.
 
 Ultimately, we chose a combination of **HTML5 Canvas**, **JavaScript**, and **CSS** to keep things lightweight and accessible for beginners.
 
@@ -123,13 +122,31 @@ The challenge was to make the transition between game mode and lesson mode feel 
 **Lesson Learned:** Separating game logic from lesson content helped us manage transitions better, and it made the code more modular and maintainable.
 
 ---
+### **Overall**
+Even though we were exposed to new coding and development skills, we also learned soft skills such as effective communication, time management, and collaboration. Working as a team taught us how to delegate tasks fairly, listen to each other's ideas, and adapt when things didn’t go as planned. These interpersonal skills were just as valuable as the technical ones—and they’ll stick with us long after the project ends. 
+
+---
+
+### **User input**
+As we spoke with our peers, they gave us thoughtful input on how to make our game more engaging. They suggested adding a background and making our fun facts more entertaining. Based on their feedback, we redesigned the maze into a hay maze set on a farm, which added a playful and thematic touch. We also updated our educational content to include more relevant and interesting facts, moving away from dry syntax explanations and toward material that felt more connected to the gameplay experience. 
+
+---
+
+### **Future Plans**
+
+**Customization Options:**
+Let users choose their character or theme for the maze. Peppa could be joined by other characters, or users could design their own maze layouts.
+
+**Broader Web Development Topics:**
+Expand the educational content to cover more areas of web development, such as backend tools, JavaScript libraries, or even frameworks like React.
+Offer a quiz or challenge at the end of the game to reinforce learning.
+
+**User Feedback Loop:**
+Integrate a feedback system so users can suggest improvements or report issues within the game. This would allow us to continue refining the experience based on actual user input. 
+
+---
 
 ## **Final Thoughts**
 
 This Peppa Pig maze game is a fun and educational way to engage beginners in web development. By incorporating a playful character and interactive learning, we’ve managed to break down a potentially overwhelming topic into manageable, enjoyable chunks. Whether you’re a complete beginner or just looking for a new way to teach coding, this project shows how creativity and thoughtful planning can make a huge difference in the learning process.
-
 ---
-
-## **Next Steps**
-
-Now that you’ve seen the process behind this interactive learning game, why not try implementing your own version? Or perhaps dive deeper into one of the areas we covered in this post, like JavaScript game logic or setting up your development environment. The possibilities are endless!
