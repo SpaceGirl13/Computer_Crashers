@@ -149,4 +149,5 @@ Integrate a feedback system so users can suggest improvements or report issues w
 ## **Final Thoughts**
 
 This Peppa Pig maze game is a fun and educational way to engage beginners in web development. By incorporating a playful character and interactive learning, we’ve managed to break down a potentially overwhelming topic into manageable, enjoyable chunks. Whether you’re a complete beginner or just looking for a new way to teach coding, this project shows how creativity and thoughtful planning can make a huge difference in the learning process.
+
 ---
