@@ -8,7 +8,7 @@ comments: false
 
 # **Building an Interactive Learning Experience: Peppa Pig in a Maze**
 
-In our latest project, we combined interactive storytelling with coding to help beginners understand the basics of website development. The concept? A Peppa Pig character navigating through a maze, with a twist. Once the character reaches a specific point in the maze, the user gets access to a lesson on setting up tools for web development. This was a fun, educational, and engaging way to make the learning process more interactive!
+In our latest project, we combined interactive storytelling with coding to help beginners understand LxD basics and tools setup. The concept? A Peppa Pig character navigating through a maze, with a twist. Once the character reaches a specific point in the maze, the user gets access to a lesson on setting up tools for web development. This was a fun, educational, and engaging way to make the learning process more interactive!
 
 ## **What the Game Does**
 
